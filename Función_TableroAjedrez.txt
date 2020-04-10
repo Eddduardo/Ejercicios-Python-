@@ -1,0 +1,88 @@
+import re
+'''
+1 rey
+1 dama
+2 torres
+2 caballos
+2 alfiles
+8 peones
+
+16 piezas
+
+deben estar en espacios permitidos
+    comparar la tabla que ingresa con una tabla preestablecida
+
+si la pieza es blanca:
+    empieza con w (white)
+si la pieza es negra:
+    empieza con b (black)
+seguido de pawn (peón), knight (caballo), bishop (alfil), rook (torre), queen (reina) o king (rey)
+
+'''
+# Se comprueba que las celdas sean celdas permitidas en una tabla preestablecida
+def ajedrez(prueba):
+    '''prueba = {'1h': 'bking', '6c': 'wqueen', '2g': 'bbishop', '5h': 'bqueen', '3e': 'wking'}''' #Esta fue una muestra para 
+                       		 # TABLERO BASE								#comprobar si funcionaba la función
+
+    lista =[]
+    palabra = 'abcdefgh'
+    numero = '12345678'
+    for i in numero:
+        for k in palabra:
+            lista.append(''.join([i,k]))
+
+                        #CUENTA LAS VECES QUE APARECE UNA CELDA
+    llaves = list(prueba.keys())
+    count = {}
+    for character in llaves:
+        count.setdefault(character,0)
+        count[character] = count[character]+1
+    oracion = ''
+    for h in count.values():
+        if str(h) == '1':
+            oracion = oracion + str(h)
+        else:
+            break
+    if oracion != '1'*len(list(count.values())):
+        print('Hay celdas repetidas')
+    else:
+        print('No hay celdas repetidas')
+        
+
+
+    #Se comprueba que los nombres de las fichas estén escritos bien
+    formula = ' '.join(prueba.values())
+
+    maquetaBlack = re.compile(r'b(knight|queen|king|rook|bishop|pawn)',re.IGNORECASE) #Esto quizá se pudo acotrar a una línea con r'(b|w)' 
+    buscarBlack = maquetaBlack.findall(formula)
+    maquetaWhite = re.compile(r'w(knight|queen|king|rook|bishop|pawn)',re.IGNORECASE)
+    buscarWhite = maquetaWhite.findall(formula)
+    if (len(buscarBlack)+len(buscarWhite)==len(list(prueba.values()))):
+        print('Los nombres de las fichas están escritos correctamente')
+    else:
+        print('Los nombres de las fichas no están escritos correctamente')
+        
+
+    #Se comrprueba que el número de fichas de cada tipo sea el permitido
+
+    '''fichas = {}
+    for j in prueba.values():
+        fichas.setdefault(j,0)
+        fichas[j] = fichas[j]+1'''
+    fichas = {'bking':1,'bqueen':1,'bbishop':2,'bknight':2,
+              'brook':2,'bpawn':8,'wking':1,'wqueen':1,
+              'wbishop':2,'wknight':2,'wrook':2,'wpawn':8}
+    elementos = list(prueba.values())
+    contador = {}
+    llenar =[]
+    for g in elementos:
+        contador.setdefault(g,0)
+        contador[g] = contador[g]+1
+    for n in contador:
+        if contador[n] == fichas[n]:   #Intenté colocar fichas[(n.toLowerCase)] para no limitar la lectura de las keys del diccionario prueba,
+            llenar.append('A')		# pero me arrojó Error: str no tiene método toLowerCase
+    if len(llenar)<=len(elementos):
+        print('Hay el número correcto de cada fichas')
+    else:
+        print('No hay el número correcto de cada ficha')
+
